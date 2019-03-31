@@ -14,7 +14,7 @@ app.use(
         type Event {
             _id: ID!
             title: String!
-            description: String!
+            number_of_guests: Int!
             location: String!
             price: Float!
             date: String!
@@ -22,7 +22,7 @@ app.use(
 
         input EventInput {
             title: String!
-            description: String!
+            number_of_guests: Int!
             location: String!
             price: Float!
             date: String!
@@ -49,7 +49,7 @@ app.use(
         const event = {
           _id: Math.random().toString(),
           title: args.eventInput.title,
-          description: args.eventInput.description,
+          number_of_guests: args.eventInput.number_of_guests,
           location: args.eventInput.location,
           price: +args.eventInput.price,
           date: args.eventInput.date
