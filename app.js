@@ -1,6 +1,7 @@
 const express = require('express');
 const graphqlHttp = require('express-graphql');
 const { buildSchema } = require('graphql');
+const Event = require('./models/Event');
 
 const app = express();
 
@@ -18,6 +19,8 @@ app.use(
             location: String!
             price: Float!
             date: String!
+            start_time: String!
+            end_time: String!
         }
 
         input EventInput {
@@ -26,6 +29,8 @@ app.use(
             location: String!
             price: Float!
             date: String!
+            start_time: String!
+            end_time: String!
         }
 
         type RootQuery {
@@ -43,7 +48,13 @@ app.use(
     `),
     rootValue: {
       events: () => {
-        return events;
+        return Event.getAllEvents()
+          .then(events => {
+            return events;
+          })
+          .catch(err => {
+            throw err;
+          });
       },
       createEvent: args => {
         const event = {
@@ -52,7 +63,9 @@ app.use(
           number_of_guests: args.eventInput.number_of_guests,
           location: args.eventInput.location,
           price: +args.eventInput.price,
-          date: args.eventInput.date
+          date: args.eventInput.date,
+          start_time: args.eventInput.start_time,
+          end_time: args.eventInput.end_time
         };
         events.push(event);
         return event;
