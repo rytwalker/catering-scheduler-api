@@ -57,8 +57,7 @@ app.use(
           });
       },
       createEvent: args => {
-        const event = {
-          _id: Math.random().toString(),
+        const event = new Event({
           title: args.eventInput.title,
           number_of_guests: args.eventInput.number_of_guests,
           location: args.eventInput.location,
@@ -66,9 +65,21 @@ app.use(
           date: args.eventInput.date,
           start_time: args.eventInput.start_time,
           end_time: args.eventInput.end_time
-        };
-        events.push(event);
-        return event;
+        });
+        return event
+          .save()
+          .then(res => {
+            Event.getEventById(res[0])
+              .then(result => {
+                console.log(result);
+                return result;
+              })
+              .catch(err => console.log(err));
+          })
+          .catch(err => {
+            console.log(err);
+            throw err;
+          });
       }
     },
     graphiql: true
