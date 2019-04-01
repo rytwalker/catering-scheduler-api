@@ -1,7 +1,7 @@
 exports.seed = function(knex, Promise) {
   // Deletes ALL existing entries
   return knex('events')
-    .del()
+    .truncate()
     .then(function() {
       // Inserts seed entries
       return knex('events').insert([
@@ -12,7 +12,8 @@ exports.seed = function(knex, Promise) {
           price: 500.45,
           date: '2019-06-31',
           start_time: '7:00',
-          end_time: '10:00'
+          end_time: '10:00',
+          user_id: 1
         },
         {
           title: 'Kelly and Mike Wedding Reception',
@@ -22,7 +23,8 @@ exports.seed = function(knex, Promise) {
           price: 700.45,
           date: '2019-07-11',
           start_time: '7:00',
-          end_time: '10:00'
+          end_time: '10:00',
+          user_id: 2
         },
         {
           title: 'Salem Volleyball Banquet',
@@ -31,7 +33,8 @@ exports.seed = function(knex, Promise) {
           price: 410.8,
           date: '2019-05-12',
           start_time: '7:00',
-          end_time: '10:00'
+          end_time: '10:00',
+          user_id: 3
         }
       ]);
     });

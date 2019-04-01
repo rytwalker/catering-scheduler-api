@@ -23,6 +23,25 @@ app.use(
             end_time: String!
         }
 
+        type User {
+          _id: ID!
+          email: String!
+          password: String
+          first_name: String!
+          last_name: String!
+          phone_number: String!
+        }
+
+        input UserInput {
+          email: String!
+          password: String!
+          first_name: String!
+          last_name: String!
+          phone_number: String
+
+
+        }
+
         input EventInput {
             title: String!
             number_of_guests: Int!
@@ -39,6 +58,7 @@ app.use(
 
         type RootMutation {
             createEvent(eventInput: EventInput): Event
+            createUser(userInput: UserInput): User
         }
         
         schema {
