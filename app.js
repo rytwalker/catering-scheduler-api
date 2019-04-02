@@ -1,7 +1,9 @@
 const express = require('express');
 const graphqlHttp = require('express-graphql');
 const { buildSchema } = require('graphql');
+const bcrypt = require('bcryptjs');
 const Event = require('./models/Event');
+const User = require('./models/User');
 
 const app = express();
 
@@ -21,6 +23,7 @@ app.use(
             date: String!
             start_time: String!
             end_time: String!
+            user_id: Int!
         }
 
         type User {
@@ -32,24 +35,23 @@ app.use(
           phone_number: String!
         }
 
+        input EventInput {
+          title: String!
+          number_of_guests: Int!
+          location: String!
+          price: Float!
+          date: String!
+          start_time: String!
+          end_time: String!
+          user_id: Int!
+      }
+
         input UserInput {
           email: String!
           password: String!
           first_name: String!
           last_name: String!
-          phone_number: String
-
-
-        }
-
-        input EventInput {
-            title: String!
-            number_of_guests: Int!
-            location: String!
-            price: Float!
-            date: String!
-            start_time: String!
-            end_time: String!
+          phone_number: String!
         }
 
         type RootQuery {
@@ -89,7 +91,7 @@ app.use(
         return event
           .save()
           .then(res => {
-            Event.getEventById(res[0])
+            return Event.getEventById(res[0])
               .then(result => {
                 console.log(result);
                 return result;
@@ -100,6 +102,41 @@ app.use(
             console.log(err);
             throw err;
           });
+      },
+      createUser: args => {
+        return User.getUserByEmail(args.userInput.email)
+          .then(prevUser => {
+            if (prevUser) {
+              throw new Error('User exists already.');
+            }
+            const hash = bcrypt.hashSync(args.userInput.password, 12);
+            const user = new User({
+              email: args.userInput.email,
+              password: hash,
+              first_name: args.userInput.first_name,
+              last_name: args.userInput.last_name,
+              phone_number: args.userInput.phone_number
+            });
+            return user
+              .save()
+              .then(res => {
+                console.log(res);
+                return User.getUserByEmail(res[0])
+                  .then(result => {
+                    console.log(result);
+                    return { ...result, password: null };
+                  })
+                  .catch(err => {
+                    console.log(err);
+                    throw err;
+                  });
+              })
+              .catch(err => {
+                console.log(err);
+                throw err;
+              });
+          })
+          .catch(err => console.log(err));
       }
     },
     graphiql: true
