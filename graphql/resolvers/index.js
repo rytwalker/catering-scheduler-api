@@ -2,10 +2,26 @@ const bcrypt = require('bcryptjs');
 const Event = require('../../models/Event');
 const User = require('../../models/User');
 
+const getUser = async userId => {
+  try {
+    const foundUser = await User.getUserById(userId);
+
+    return { ...foundUser, password: null };
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
 module.exports = {
   events: async () => {
     const events = await Event.getAllEvents();
-    return events;
+    return events.map(event => {
+      return {
+        ...event,
+        user: getUser.bind(this, parseInt(event.user_id))
+      };
+    });
   },
   createEvent: async args => {
     const event = new Event({

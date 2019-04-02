@@ -10,7 +10,7 @@ type Event {
     date: String!
     start_time: String!
     end_time: String!
-    user_id: Int!
+    user: User!
 }
 
 type User {
