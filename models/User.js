@@ -10,18 +10,18 @@ class User {
     return database('users');
   }
 
-  static async getUserByEmail(email) {
-    // return database('users')
-    //   .where({ email })
-    //   .first();
-    try {
-      const user = await database('users')
-        .where({ email })
-        .first();
-      return user;
-    } catch (err) {
-      console.log(err);
-    }
+  static getUserByEmail(email) {
+    return database('users')
+      .where({ email })
+      .first();
+    // try {
+    //   const user = await database('users')
+    //     .where({ email })
+    //     .first();
+    //   return user;
+    // } catch (err) {
+    //   console.log(err);
+    // }
   }
 
   static exists(email) {
