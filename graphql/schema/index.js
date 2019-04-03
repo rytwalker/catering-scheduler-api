@@ -22,6 +22,12 @@ type User {
   phone_number: String!
 }
 
+type Authentication {
+  user_id: ID!
+  token: String!
+  tokenExpiration: Int!
+}
+
 input EventInput {
   title: String!
   number_of_guests: Int!
@@ -43,6 +49,7 @@ input UserInput {
 
 type RootQuery {
     events: [Event!]!
+    login(email: String!, password: String!): Authentication!
 }
 
 type RootMutation {
